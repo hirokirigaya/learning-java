@@ -6,7 +6,7 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoField;
 import java.time.temporal.TemporalAdjusters;
 
-public class TemporalAdjusterTest01 {
+public class TemporalAdjustersTest01 {
     public static void main(String[] args) {
         LocalDate now = LocalDate.now();
 
