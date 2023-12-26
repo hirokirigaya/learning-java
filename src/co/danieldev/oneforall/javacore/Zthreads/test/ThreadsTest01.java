@@ -1,4 +1,4 @@
-package co.danieldev.oneforall.javacore.Ystreams.test;
+package co.danieldev.oneforall.javacore.Zthreads.test;
 
 class ThreadExample extends Thread {
     private final char c;
@@ -38,7 +38,7 @@ class ThreadExampleRunnable implements Runnable {
     }
 }
 
-public class StreamTest17 {
+public class ThreadsTest01 {
     public static void main(String[] args) {
 //        ThreadExample t1 = new ThreadExample('A');
 //        ThreadExample t2 = new ThreadExample('B');
@@ -49,6 +49,7 @@ public class StreamTest17 {
         Thread t3 = new Thread(new ThreadExampleRunnable('C'));
         Thread t4 = new Thread(new ThreadExampleRunnable('D'));
 
+        t4.setPriority(Thread.MAX_PRIORITY);
         t1.start();
         t2.start();
         t3.start();
