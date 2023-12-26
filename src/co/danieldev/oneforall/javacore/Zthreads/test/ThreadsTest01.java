@@ -54,5 +54,13 @@ public class ThreadsTest01 {
         t2.start();
         t3.start();
         t4.start();
+
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
+        System.out.println("##################### "+ Thread.currentThread().getName() + " #####################");
     }
 }
