@@ -1,14 +1,22 @@
 package co.danieldev.oneforall.javacore.ZZAconcurrent.test;
 
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 class Counter {
     private int count;
     private AtomicInteger atomicInteger = new AtomicInteger();
+    private final Lock lock = new ReentrantLock();
 
     public void increment() {
-        count++;
-        atomicInteger.incrementAndGet();
+        lock.lock();
+        try {
+            count++;
+            atomicInteger.incrementAndGet();
+        } finally {
+            lock.unlock();
+        }
     }
 
     public int getCount() {

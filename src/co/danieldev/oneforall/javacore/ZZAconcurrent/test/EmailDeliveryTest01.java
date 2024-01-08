@@ -1,7 +1,8 @@
-package co.danieldev.oneforall.javacore.Zthreads.test;
+package co.danieldev.oneforall.javacore.ZZAconcurrent.test;
 
-import co.danieldev.oneforall.javacore.Zthreads.domain.Members;
-import co.danieldev.oneforall.javacore.Zthreads.service.EmailDeliveryService;
+
+import co.danieldev.oneforall.javacore.ZZAconcurrent.domain.Members;
+import co.danieldev.oneforall.javacore.ZZAconcurrent.service.EmailDeliveryService;
 
 import javax.swing.*;
 
