@@ -4,9 +4,9 @@ import co.danieldev.oneforall.javacore.ZZCjdbc.conn.ConnectionFactory;
 import co.danieldev.oneforall.javacore.ZZCjdbc.domain.Producer;
 import lombok.extern.log4j.Log4j2;
 
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Log4j2
 public class ProducerRepository {
@@ -46,4 +46,57 @@ public class ProducerRepository {
            log.error("Error trying to update producer '{}'", producer.getId(), e);
        }
    }
+
+    public static List<Producer> findAll() {
+       return findByName("");
+    }
+
+    public static List<Producer> findByName(String name) {
+        String sql = "SELECT * FROM `anime_store`.`producer` WHERE name LIKE '%%%s%%';".formatted(name);
+        List<Producer> producers = new ArrayList<>();
+        try (Connection conn = ConnectionFactory.Connection();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)
+        ) {
+            while (rs.next()) {
+                Producer producer = Producer
+                        .builder()
+                        .id(rs.getInt("id"))
+                        .name(rs.getString("name"))
+                        .build();
+
+                producers.add(producer);
+            }
+        } catch (SQLException e) {
+            log.error("Error trying to find all producers", e);
+        }
+
+        return producers;
+    }
+
+    public static void showResultMetaData() {
+        String sql = "SELECT * FROM `anime_store`.`producer`;";
+        try (Connection conn = ConnectionFactory.Connection();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)
+        ) {
+
+            ResultSetMetaData rsMetaData = rs.getMetaData();
+            int columnCount = rsMetaData.getColumnCount();
+
+            log.info("Column count '{}'", columnCount);
+
+            for (int i = 1; i <= columnCount; i++) {
+                log.info("Table name {}", rsMetaData.getTableName(i));
+                log.info("Column name {}", rsMetaData.getColumnName(i));
+                log.info("Column size {}", rsMetaData.getColumnDisplaySize(i));
+                log.info("Column type {}", rsMetaData.getColumnTypeName(i));
+            }
+
+        } catch (SQLException e) {
+            log.error("Error trying to showing meta data of the producers", e);
+        }
+
+
+    }
 }
