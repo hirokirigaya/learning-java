@@ -9,6 +9,7 @@ public class ProducerService {
     public static void save(Producer producer) {
         ProducerRepository.save(producer);
     }
+
     public static void delete(Integer id) {
         requireValidId(id);
         ProducerRepository.delete(id);
@@ -26,12 +27,17 @@ public class ProducerService {
     public static List<Producer> findByName(String name) {
         return ProducerRepository.findByName(name);
     }
+
     public static void showResultMetaData() {
         ProducerRepository.showResultMetaData();
     }
 
+    public static void showDriverMetaData() {
+        ProducerRepository.showDriverMetaData();
+    }
+
     public static void requireValidId(Integer id) {
-        if(id == null || id <= 0) {
+        if (id == null || id <= 0) {
             throw new IllegalArgumentException("Invalid argument passed to id, it is bigger than 0? ");
         }
     }

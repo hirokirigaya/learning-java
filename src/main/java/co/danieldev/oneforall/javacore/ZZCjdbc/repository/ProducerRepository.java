@@ -4,51 +4,54 @@ import co.danieldev.oneforall.javacore.ZZCjdbc.conn.ConnectionFactory;
 import co.danieldev.oneforall.javacore.ZZCjdbc.domain.Producer;
 import lombok.extern.log4j.Log4j2;
 
+import javax.xml.transform.Result;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 @Log4j2
 public class ProducerRepository {
-   public static void save(Producer producer) {
-       String sql = "INSERT INTO `anime_store`.`producer` (`name`) VALUES ('%s');".formatted(producer.getName());
+    public static void save(Producer producer) {
+        String sql = "INSERT INTO `anime_store`.`producer` (`name`) VALUES ('%s');".formatted(producer.getName());
 
-       try (Connection conn = ConnectionFactory.Connection();
-            Statement stmt = conn.createStatement()
-       ) {
-           int rowsAffected = stmt.executeUpdate(sql);
-           log.info("Inserted producer '{}'.Affected rows in the database {}",producer.getName(), rowsAffected);
-       } catch (SQLException e) {
-           log.error("Error trying to insert producer '{}'", producer.getName(), e);
-       }
-   }
-   public static void delete(int id) {
-       String sql = "DELETE FROM `anime_store`.`producer` WHERE (`id` = '%d');".formatted(id);
+        try (Connection conn = ConnectionFactory.Connection();
+             Statement stmt = conn.createStatement()
+        ) {
+            int rowsAffected = stmt.executeUpdate(sql);
+            log.info("Inserted producer '{}'.Affected rows in the database {}", producer.getName(), rowsAffected);
+        } catch (SQLException e) {
+            log.error("Error trying to insert producer '{}'", producer.getName(), e);
+        }
+    }
 
-       try (Connection conn = ConnectionFactory.Connection();
-            Statement stmt = conn.createStatement()
-       ) {
-           int rowsAffected = stmt.executeUpdate(sql);
-           log.info("Deleted producer '{}'.Affected rows in the database {}",id, rowsAffected);
-       } catch (SQLException e) {
-           log.error("Error trying to delete producer '{}'", id, e);
-       }
-   }
-   public static void update(Producer producer) {
-       String sql = "UPDATE `anime_store`.`producer` SET `name` = '%s' WHERE (`id` = '%d');".formatted(producer.getName(),producer.getId());
+    public static void delete(int id) {
+        String sql = "DELETE FROM `anime_store`.`producer` WHERE (`id` = '%d');".formatted(id);
 
-       try (Connection conn = ConnectionFactory.Connection();
-            Statement stmt = conn.createStatement()
-       ) {
-           int rowsAffected = stmt.executeUpdate(sql);
-           log.info("Updated producer with id '{}'.Affected rows in the database {}",producer.getId(), rowsAffected);
-       } catch (SQLException e) {
-           log.error("Error trying to update producer '{}'", producer.getId(), e);
-       }
-   }
+        try (Connection conn = ConnectionFactory.Connection();
+             Statement stmt = conn.createStatement()
+        ) {
+            int rowsAffected = stmt.executeUpdate(sql);
+            log.info("Deleted producer '{}'.Affected rows in the database {}", id, rowsAffected);
+        } catch (SQLException e) {
+            log.error("Error trying to delete producer '{}'", id, e);
+        }
+    }
+
+    public static void update(Producer producer) {
+        String sql = "UPDATE `anime_store`.`producer` SET `name` = '%s' WHERE (`id` = '%d');".formatted(producer.getName(), producer.getId());
+
+        try (Connection conn = ConnectionFactory.Connection();
+             Statement stmt = conn.createStatement()
+        ) {
+            int rowsAffected = stmt.executeUpdate(sql);
+            log.info("Updated producer with id '{}'.Affected rows in the database {}", producer.getId(), rowsAffected);
+        } catch (SQLException e) {
+            log.error("Error trying to update producer '{}'", producer.getId(), e);
+        }
+    }
 
     public static List<Producer> findAll() {
-       return findByName("");
+        return findByName("");
     }
 
     public static List<Producer> findByName(String name) {
@@ -96,7 +99,36 @@ public class ProducerRepository {
         } catch (SQLException e) {
             log.error("Error trying to showing meta data of the producers", e);
         }
+    }
 
+    public static void showDriverMetaData() {
+        try (Connection conn = ConnectionFactory.Connection()) {
+            DatabaseMetaData dbMetaData = conn.getMetaData();
 
+            if(dbMetaData.supportsResultSetType(ResultSet.TYPE_FORWARD_ONLY)) {
+                log.info("Supports TYPE_FORWARD_ONLY");
+
+                if (dbMetaData.supportsResultSetConcurrency(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_UPDATABLE)) {
+                    log.info("Supports CONCUR_UPDATABLE");
+                }
+            }
+            if(dbMetaData.supportsResultSetType(ResultSet.TYPE_SCROLL_INSENSITIVE)) {
+                log.info("Supports TYPE_SCROLL_INSENSITIVE");
+
+                if (dbMetaData.supportsResultSetConcurrency(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_UPDATABLE)) {
+                    log.info("Supports CONCUR_UPDATABLE");
+                }
+            }
+            if(dbMetaData.supportsResultSetType(ResultSet.TYPE_SCROLL_SENSITIVE)) {
+                log.info("Supports TYPE_SCROLL_SENSITIVE");
+
+                if (dbMetaData.supportsResultSetConcurrency(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_UPDATABLE)) {
+                    log.info("Supports CONCUR_UPDATABLE");
+                }
+            }
+
+        } catch (SQLException e) {
+            log.error("Error trying to showing meta data of the db", e);
+        }
     }
 }

@@ -20,6 +20,7 @@ public class ConnectionFactoryTest01 {
 //        List<Producer> producers = ProducerService.findAll();
 //        List<Producer> producers = ProducerService.findByName("Asuna");
 //        log.info("Producers found {}", producers);
-        ProducerService.showResultMetaData();
+//        ProducerService.showResultMetaData();
+        ProducerService.showDriverMetaData();
     }
 }
