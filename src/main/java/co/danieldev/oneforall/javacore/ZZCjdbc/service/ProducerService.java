@@ -36,6 +36,10 @@ public class ProducerService {
         ProducerRepository.showDriverMetaData();
     }
 
+    public static void showTypeScrollWorking() {
+        ProducerRepository.showTypeScrollWorking();
+    }
+
     public static void requireValidId(Integer id) {
         if (id == null || id <= 0) {
             throw new IllegalArgumentException("Invalid argument passed to id, it is bigger than 0? ");

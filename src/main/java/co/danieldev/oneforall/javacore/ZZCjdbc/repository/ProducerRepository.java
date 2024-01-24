@@ -131,4 +131,49 @@ public class ProducerRepository {
             log.error("Error trying to showing meta data of the db", e);
         }
     }
+    public static void showTypeScrollWorking() {
+        String sql = "SELECT * FROM `anime_store`.`producer`;";
+        try (Connection conn = ConnectionFactory.Connection();
+             Statement stmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
+             ResultSet rs = stmt.executeQuery(sql)
+        ) {
+
+            log.info("Last row? {}", rs.last());
+            log.info("Row number {}", rs.getRow());
+            log.info(Producer.builder().id(rs.getInt("id")).name(rs.getString("name")).build());
+            log.info("-----------------");
+
+            log.info("First row? {}", rs.first());
+            log.info("Row number {}", rs.getRow());
+            log.info(Producer.builder().id(rs.getInt("id")).name(rs.getString("name")).build());
+            log.info("-----------------");
+
+            log.info("Absolute row? {}", rs.absolute(4));
+            log.info("Row number {}", rs.getRow());
+            log.info(Producer.builder().id(rs.getInt("id")).name(rs.getString("name")).build());
+            log.info("-----------------");
+
+            log.info("Relative row? {}", rs.relative(+1));
+            log.info("Row number {}", rs.getRow());
+            log.info(Producer.builder().id(rs.getInt("id")).name(rs.getString("name")).build());
+            log.info("-----------------");
+
+            log.info("Is Last row? {}", rs.isLast());
+            log.info("Row number {}", rs.getRow());
+            log.info("-----------------");
+
+            log.info("Is First row? {}", rs.isLast());
+            log.info("Row number {}", rs.getRow());
+            log.info("-----------------");
+
+            log.info("Last row? {}", rs.last());
+            log.info("Row number {}", rs.getRow());
+            rs.afterLast();
+            while (rs.previous()) {
+                log.info(Producer.builder().id(rs.getInt("id")).name(rs.getString("name")).build());
+            }
+        } catch (SQLException e) {
+            log.error("Error trying to execute type scroll", e);
+        }
+    }
 }
