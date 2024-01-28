@@ -4,7 +4,6 @@ import co.danieldev.oneforall.javacore.ZZCjdbc.conn.ConnectionFactory;
 import co.danieldev.oneforall.javacore.ZZCjdbc.domain.Producer;
 import lombok.extern.log4j.Log4j2;
 
-import javax.xml.transform.Result;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -62,13 +61,7 @@ public class ProducerRepository {
              ResultSet rs = stmt.executeQuery(sql)
         ) {
             while (rs.next()) {
-                Producer producer = Producer
-                        .builder()
-                        .id(rs.getInt("id"))
-                        .name(rs.getString("name"))
-                        .build();
-
-                producers.add(producer);
+                producers.add(getProducer(rs));
             }
         } catch (SQLException e) {
             log.error("Error trying to find all producers", e);
@@ -175,5 +168,79 @@ public class ProducerRepository {
         } catch (SQLException e) {
             log.error("Error trying to execute type scroll", e);
         }
+    }
+
+    public static List<Producer> findByNameAndUpdateToLowerCase(String name) {
+        String sql = "SELECT * FROM `anime_store`.`producer` WHERE name LIKE '%%%s%%';".formatted(name);
+        List<Producer> producers = new ArrayList<>();
+        try (Connection conn = ConnectionFactory.Connection();
+             Statement stmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
+             ResultSet rs = stmt.executeQuery(sql)
+        ) {
+            while (rs.next()) {
+                rs.updateString("name", rs.getString("name").toLowerCase());
+                rs.updateRow();
+
+                producers.add(getProducer(rs));
+            }
+        } catch (SQLException e) {
+            log.error("Error trying to find all producers", e);
+        }
+
+        return producers;
+    }
+
+    public static List<Producer> findByNameAndInsertWhenNotFound(String name) {
+        String sql = "SELECT * FROM `anime_store`.`producer` WHERE name LIKE '%%%s%%';".formatted(name);
+        List<Producer> producers = new ArrayList<>();
+        try (Connection conn = ConnectionFactory.Connection();
+             Statement stmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
+             ResultSet rs = stmt.executeQuery(sql)
+        ) {
+            if(rs.next()) return producers;
+
+            insertNewProducer(name, rs);
+
+            producers.add(getProducer(rs));
+        } catch (SQLException e) {
+            log.error("Error trying to find all producers", e);
+        }
+
+        return producers;
+    }
+
+    public static List<Producer> findByNameAndDelete(String name) {
+        String sql = "SELECT * FROM `anime_store`.`producer` WHERE name LIKE '%%%s%%';".formatted(name);
+        List<Producer> producers = new ArrayList<>();
+        try (Connection conn = ConnectionFactory.Connection();
+             Statement stmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
+             ResultSet rs = stmt.executeQuery(sql)
+        ) {
+            while (rs.next()) {
+               log.info("Deleting '{}'", rs.getString("name"));
+               rs.deleteRow();
+            }
+        } catch (SQLException e) {
+            log.error("Error trying to find all producers", e);
+        }
+
+        return producers;
+    }
+
+    private static Producer getProducer(ResultSet rs) throws SQLException {
+        return Producer
+                .builder()
+                .id(rs.getInt("id"))
+                .name(rs.getString("name"))
+                .build();
+    }
+
+    private static void insertNewProducer(String name, ResultSet rs) throws SQLException {
+        rs.moveToInsertRow();
+        rs.updateString("name", name);
+        rs.insertRow();
+
+        rs.beforeFirst();
+        rs.next();
     }
 }

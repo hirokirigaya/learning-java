@@ -28,6 +28,16 @@ public class ProducerService {
         return ProducerRepository.findByName(name);
     }
 
+    public static List<Producer> findByNameAndUpdateToLowerCase(String name) {
+        return ProducerRepository.findByNameAndUpdateToLowerCase(name);
+    }
+    public static List<Producer> findByNameAndInsertWhenNotFound(String name) {
+        return ProducerRepository.findByNameAndInsertWhenNotFound(name);
+    }
+    public static List<Producer> findByNameAndDelete(String name) {
+        return ProducerRepository.findByNameAndDelete(name);
+    }
+
     public static void showResultMetaData() {
         ProducerRepository.showResultMetaData();
     }
