@@ -209,9 +209,8 @@ public class ProducerRepository {
         return producers;
     }
 
-    public static List<Producer> findByNameAndDelete(String name) {
+    public static void findByNameAndDelete(String name) {
         String sql = "SELECT * FROM `anime_store`.`producer` WHERE name LIKE '%%%s%%';".formatted(name);
-        List<Producer> producers = new ArrayList<>();
         try (Connection conn = ConnectionFactory.Connection();
              Statement stmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
              ResultSet rs = stmt.executeQuery(sql)
@@ -224,7 +223,6 @@ public class ProducerRepository {
             log.error("Error trying to find all producers", e);
         }
 
-        return producers;
     }
 
     private static Producer getProducer(ResultSet rs) throws SQLException {

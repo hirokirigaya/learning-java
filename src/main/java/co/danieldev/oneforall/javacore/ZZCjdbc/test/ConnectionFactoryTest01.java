@@ -25,7 +25,7 @@ public class ConnectionFactoryTest01 {
 //        ProducerService.showTypeScrollWorking();
 //        List<Producer> producers = ProducerService.findByNameAndUpdateToLowerCase("Kirito");
 //        List<Producer> producers = ProducerService.findByNameAndInsertWhenNotFound("Dan Ferri");
-        List<Producer> producers = ProducerService.findByNameAndDelete("Dan Ferri");
 //        log.info("Producers found {}", producers);
+          ProducerService.findByNameAndDelete("Dan Ferri");
     }
 }

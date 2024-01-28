@@ -34,8 +34,8 @@ public class ProducerService {
     public static List<Producer> findByNameAndInsertWhenNotFound(String name) {
         return ProducerRepository.findByNameAndInsertWhenNotFound(name);
     }
-    public static List<Producer> findByNameAndDelete(String name) {
-        return ProducerRepository.findByNameAndDelete(name);
+    public static void findByNameAndDelete(String name) {
+        ProducerRepository.findByNameAndDelete(name);
     }
 
     public static void showResultMetaData() {
